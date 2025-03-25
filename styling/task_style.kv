@@ -1,0 +1,74 @@
+#:import rgba kivy.utils.get_color_from_hex
+
+<TaskScreen>:
+    task_input: task_input
+    task_layout: task_layout
+
+    canvas.before:
+        Color:
+            rgba: rgba("#E3F2FD")  # Light blue background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+
+        Label:
+            text: "Task List"
+            font_size: 26
+            color: rgba("#0D47A1")  # Dark Blue Title
+            bold: True
+            size_hint_y: None
+            height: dp(60)
+
+        Widget:  # Spacer
+
+        TextInput:
+            id: task_input
+            hint_text: "Add a new task"
+            size_hint_y: None
+            height: dp(50)
+            background_color: rgba("#FFFFFF")
+            foreground_color: rgba("#0D47A1")  # Dark Blue Text
+            padding: [10, 10]
+
+        Button:
+            text: "Add Task"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")  # White text
+            canvas.before:
+                Color:
+                    rgba: rgba("#1E88E5")  # Blue button
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: root.add_task()
+
+        ScrollView:
+            size_hint: (1, 1)
+            BoxLayout:
+                id: task_layout
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+
+        Button:
+            text: "Back to Menu"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")
+            canvas.before:
+                Color:
+                    rgba: rgba("#D32F2F")  # Red for exit
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: app.root.current = "menu"

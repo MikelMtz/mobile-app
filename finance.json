@@ -1,0 +1,40 @@
+{
+    "2025-02": {
+        "Income": [],
+        "Expenses": []
+    },
+    "2025-03": {
+        "Income": [],
+        "Expenses": []
+    },
+    "2024-12": {
+        "Income": [],
+        "Expenses": []
+    },
+    "2024 September": {
+        "Income": [
+            {
+                "amount": 100,
+                "description": "food"
+            },
+            {
+                "amount": 50,
+                "description": "cosas"
+            }
+        ],
+        "Expenses": []
+    },
+    "2024 October": {
+        "Income": [],
+        "Expenses": []
+    },
+    "Enero 2024": {
+        "Income": [],
+        "Expenses": [
+            {
+                "amount": 100,
+                "description": "comida"
+            }
+        ]
+    }
+}

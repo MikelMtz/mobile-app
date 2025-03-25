@@ -1,0 +1,79 @@
+#:import rgba kivy.utils.get_color_from_hex
+
+<SpotifyScreen>:
+    message_label: message_label
+
+    canvas.before:
+        Color:
+            rgba: rgba("#E3F2FD")  # Light blue background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+
+        Label:
+            text: "Spotify Connection"
+            font_size: 26
+            color: rgba("#0D47A1")  # Dark Blue Title
+            bold: True
+            size_hint_y: None
+            height: dp(60)
+
+        Widget:  # Spacer
+
+        Button:
+            text: "Connect to Spotify"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")  # White text
+            canvas.before:
+                Color:
+                    rgba: rgba("#1E88E5")  # Blue button
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: root.connect_to_spotify()
+
+        Button:
+            text: "Play Song by Voice Command"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")  # White text
+            canvas.before:
+                Color:
+                    rgba: rgba("#1E88E5")  # Blue button
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: root.play_song_by_voice()
+
+        Label:
+            id: message_label
+            text: ""
+            font_size: 18
+            color: rgba("#000000")  # Black text for messages
+            size_hint_y: None
+            height: dp(50)
+
+        Button:
+            text: "Back to Menu"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")
+            canvas.before:
+                Color:
+                    rgba: rgba("#D32F2F")  # Red for exit
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: app.root.current = "menu"

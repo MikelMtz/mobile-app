@@ -1,0 +1,86 @@
+#:import rgba kivy.utils.get_color_from_hex
+
+<MenuScreen>:
+    canvas.before:
+        Color:
+            rgba: rgba("#E3F2FD")  # Light blue background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(15)
+
+        Label:
+            text: "Main Menu"
+            font_size: 26
+            color: rgba("#0D47A1")  # Dark Blue Text
+            bold: True
+            size_hint_y: None
+            height: dp(60)
+
+        Widget:  # Spacer for better layout
+
+        Button:
+            text: "Tasks"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")  # White text
+            canvas.before:
+                Color:
+                    rgba: rgba("#1E88E5")  # Blue button
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: app.root.current = "tasks"
+
+        Button:
+            text: "Passwords"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")  # White text
+            canvas.before:
+                Color:
+                    rgba: rgba("#1E88E5")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: app.root.current = "password_entry"
+
+        Button:
+            text: "Spotify"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")
+            canvas.before:
+                Color:
+                    rgba: rgba("#1E88E5")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: app.root.current = "spotify"
+
+        Button:
+            text: "Exit"
+            size_hint_y: None
+            height: dp(50)
+            background_color: 0, 0, 0, 0
+            color: rgba("#FFFFFF")
+            canvas.before:
+                Color:
+                    rgba: rgba("#D32F2F")  # Red for exit
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [20]
+            on_press: app.stop()
+
+        Widget:  # Spacer for better layout
