@@ -1,17 +1,5 @@
 {
-    "2025-02": {
-        "Income": [],
-        "Expenses": []
-    },
-    "2025-03": {
-        "Income": [],
-        "Expenses": []
-    },
-    "2024-12": {
-        "Income": [],
-        "Expenses": []
-    },
-    "2024 September": {
+    "2024 Septiembre": {
         "Income": [
             {
                 "amount": 100,
@@ -24,17 +12,12 @@
         ],
         "Expenses": []
     },
-    "2024 October": {
+    "2024 Enero": {
         "Income": [],
         "Expenses": []
     },
-    "Enero 2024": {
+    "2025 Enero": {
         "Income": [],
-        "Expenses": [
-            {
-                "amount": 100,
-                "description": "comida"
-            }
-        ]
+        "Expenses": []
     }
 }
