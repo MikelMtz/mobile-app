@@ -25,9 +25,25 @@ from dateutil.relativedelta import relativedelta
 
 FINANCE_FILE = "finance.json"
 INVESTMENTS_FILE = "investments.json"
-MONTH_ORDER = {month: index for index, month in enumerate([
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-])}
+
+MONTH_ORDER = {
+    "Enero": 0, "Febrero": 1, "Marzo": 2, "Abril": 3, "Mayo": 4, "Junio": 5,
+    "Julio": 6, "Agosto": 7, "Septiembre": 8, "Octubre": 9, "Noviembre": 10, "Diciembre": 11
+}
+
+
+    
+def parse_month_year(month_str):
+    try:
+        parts = month_str.split()
+        if len(parts) != 2:
+            return None, None
+        month, year = parts[0], parts[1]
+        if month not in MONTH_ORDER or not year.isdigit():
+            return None, None
+        return int(year), MONTH_ORDER[month]
+    except Exception:
+        return None, None
 
 class FinanceScreen(Screen):
     def __init__(self,screen_manager, **kwargs):
@@ -111,51 +127,51 @@ class FinanceMainScreen(Screen):
         ax.bar(["Income", "Expenses"], [total_income, total_expenses], color=["green", "red"])
         
         return FigureCanvasKivyAgg(fig)
-    
+
 class MonthsListScreen(Screen):
     def __init__(self, screen_manager, **kwargs):
         super().__init__(**kwargs)
         self.screen_manager = screen_manager
         self.data = self.load_finance_data()
-        
-        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
-        
+
+        main_layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+
         # Back button
         back_button = Button(text="Back", size_hint_y=None, height=50)
         back_button.bind(on_press=lambda instance: setattr(screen_manager, 'current', 'finance_main_screen'))
-        layout.add_widget(back_button)
-        
-        
+        main_layout.add_widget(back_button)
+
         # Input field to add new month
-        self.month_input = TextInput(hint_text="Enter YEAR and MONTH", size_hint_y=None, height=50)
-        layout.add_widget(self.month_input)
-        
+        self.month_input = TextInput(hint_text="Ejemplo: 2024 Septiembre", size_hint_y=None, height=50)
+        main_layout.add_widget(self.month_input)
+
         add_month_button = Button(text="Add New Month", size_hint_y=None, height=50)
         add_month_button.bind(on_press=self.add_new_month)
-        layout.add_widget(add_month_button)
-        
-        # Scrollable list of months
-        self.scroll_view = ScrollView()
-        self.months_list = GridLayout(cols=1, size_hint_y=None)
-        self.months_list.bind(minimum_height=self.months_list.setter('height'))
-        self.scroll_view.add_widget(self.months_list)
-        layout.add_widget(self.scroll_view)
-        
-        self.populate_months_list()
-        
-        self.add_widget(layout)
+        main_layout.add_widget(add_month_button)
 
-    def delete_month(self, month):
-        if month in self.data:
-            del self.data[month]
-            self.save_finance_data()
-            self.populate_months_list()
-    
+        # Scrollable list container with fixed height
+        container = BoxLayout(orientation='vertical', size_hint=(1, None), height=400)  # Set a fixed height or adjust dynamically
+        self.scroll_view = ScrollView(size_hint=(1, None), height=400)  # Adjust as needed for scrollable area
+
+        self.months_list = GridLayout(cols=1, size_hint_y=None, spacing=10, padding=5)
+        self.months_list.bind(minimum_height=self.months_list.setter('height'))  # Ensure dynamic height adjustment
+        self.scroll_view.add_widget(self.months_list)
+        container.add_widget(self.scroll_view)
+        main_layout.add_widget(container)
+
+        # Populate months list
+        self.populate_months_list()
+
+        self.add_widget(main_layout)
+
     def load_finance_data(self):
         if os.path.exists(FINANCE_FILE):
             with open(FINANCE_FILE, "r") as file:
-                return json.load(file)
+                data = json.load(file)
+                print(f"Loaded finance data: {data}")  # Debugging statement
+                return data
         return {}
+
     
     def add_new_month(self, instance):
         new_month = self.month_input.text.strip()
@@ -163,34 +179,51 @@ class MonthsListScreen(Screen):
             self.data[new_month] = {"Income": [], "Expenses": []}
             self.save_finance_data()
             self.populate_months_list()
-    
+            self.month_input.text = ""  # Clear the input box after adding the month
+
     def save_finance_data(self):
         with open(FINANCE_FILE, "w") as file:
             json.dump(self.data, file, indent=4)
-    
+
+    def delete_month(self, month):
+        if month in self.data:
+            del self.data[month]
+            self.save_finance_data()
+            self.populate_months_list()
+
     def populate_months_list(self):
         self.months_list.clear_widgets()
-        sorted_months = sorted(self.data.keys(), key=lambda m: (-int(m.split()[1]), -MONTH_ORDER[m.split()[0]]))
-        
-        for month in sorted_months:
+
+        valid_months = []
+        for month in self.data.keys():
+            year, month_order = parse_month_year(month)
+            if year is not None and month_order is not None:
+                valid_months.append((year, month_order, month))
+
+        sorted_months = sorted(valid_months, key=lambda x: (-x[0], -x[1]))
+
+        self.months_list.height = len(sorted_months) * 50  # Adjust height dynamically
+
+        for _, _, month in sorted_months:
             month_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=50)
-            
+
             month_button = Button(text=month, size_hint_x=0.8)
             month_button.bind(on_press=lambda instance, m=month: self.open_selected_month(m))
-            
+
             delete_button = Button(text="X", size_hint_x=0.2)
             delete_button.bind(on_press=lambda instance, m=month: self.delete_month(m))
-            
+
             month_layout.add_widget(month_button)
             month_layout.add_widget(delete_button)
             self.months_list.add_widget(month_layout)
-    
-    def open_selected_month(self, month):
-        if f"finances_{month}" not in self.screen_manager.screen_names:
-            month_screen = FinanceMonthScreen(self.screen_manager, f"finances_{month}", month)
-            self.screen_manager.add_widget(month_screen)
-        self.screen_manager.current = f"finances_{month}"
 
+
+    def open_selected_month(self, month):
+        screen_name = f"finances_{month}"
+        if screen_name not in self.screen_manager.screen_names:
+            month_screen = FinanceMonthScreen(self.screen_manager, name=screen_name, month=month)
+            self.screen_manager.add_widget(month_screen)
+        self.screen_manager.current = screen_name
 
 
 class FinanceMonthScreen(Screen):

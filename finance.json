@@ -1,22 +1,13 @@
 {
-    "2024 Septiembre": {
-        "Income": [
-            {
-                "amount": 100,
-                "description": "food"
-            },
-            {
-                "amount": 50,
-                "description": "cosas"
-            }
-        ],
-        "Expenses": []
-    },
-    "2024 Enero": {
+    "2025 Septiembre": {
         "Income": [],
         "Expenses": []
     },
-    "2025 Enero": {
+    "2024 Octubre": {
+        "Income": [],
+        "Expenses": []
+    },
+    "2023 Enero": {
         "Income": [],
         "Expenses": []
     }
