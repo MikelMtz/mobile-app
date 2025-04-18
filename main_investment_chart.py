@@ -332,7 +332,7 @@ class FinanceMonthScreen(Screen):
             if amount_input.text.isdigit():
                 self.data[self.month]["Income" if category == "Income" else "Expenses"].append({"amount": int(amount_input.text), "description": description_input.text})
         self.save_finance_data()
-
+ 
 
 class FinanceScreenInvestmets(Screen):
     def __init__(self, screen_manager, **kwargs):
